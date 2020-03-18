@@ -1,41 +1,27 @@
 from flask import Flask, render_template, request, session
+from bs4 import BeautifulSoup
+import requests
 import os
+import modulGS_OO as MG
 
 application.secret_key = 'bismillaah'
 application = Flask(__name__)
+
+# specify the url
+url = 'https://scholar.google.com/citations?hl=en&user=M1_IJLAAAAAJ'
+page = requests.get(url)
+soup = BeautifulSoup(page.text, 'html.parser')
+tes = MG.GS_Scraper(soup)
+nama = tes.NamaAkun()
 
 @application.route('/', methods=['GET', 'POST'])
 def home():
     return index()
 
-@application.route('index', methods=['GET', 'POST'])
+@application.route('/index', methods=['POST'])
 def index():
-    if request.method == 'POST':
-        url = request.form['alamat']
-        #tes = "Halo"
-        return render_template('index.html', url=url)
-    else:
-        return render_template('index.html')
-
-@application.route('/login', methods=['GET', 'POST'])
-def do_admin_login():
-    error = None
-    if request.method == 'POST':
-        if request.form['password'] == '1234':
-            session['logged_in'] = True
-            return render_template('index.html')
-        else:            
-            error = True
-            return render_template('login.html', error=error)
-    else:
-        return render_template('login.html')
-        
-@application.route("/logout")
-def logout():
-    session['logged_in'] = False
-    #return home()
-    #print("admin keluar")
-    return render_template('login.html')
-
+     return "URL: " + url + "<br/><textarea>" + str(soup) + "</textarea>" + \
+             "<br/>Nama: " + nama
+    
 if __name__ == "__main__":
     application.run()
