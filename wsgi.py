@@ -4,7 +4,6 @@ import requests
 import os
 import modulGS_OO as MG
 
-application.secret_key = 'bismillaah'
 application = Flask(__name__)
 
 # specify the url
